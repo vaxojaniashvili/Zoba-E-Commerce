@@ -1,30 +1,38 @@
 "use client";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { products } from "../../data/products";
+import { Filters, Product } from "@/app/common/types/common";
 
-const HomePage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filters, setFilters] = useState({
+const HomePage: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [filters, setFilters] = useState<Filters>({
     category: "ყველა",
     price: "ყველა",
     brand: "ყველა",
   });
-  const searchParams = useSearchParams();
-  //   const id = searchParams.get("id");
-  //   const title = searchParams.get("title");
-
   const router = useRouter();
 
-  const handleSearch = () => {
+  const handleSearch = (): void => {
     console.log("ძებნა:", searchTerm);
   };
 
-  const handleFilterChange = (filterType, value) => {
+  const handleFilterChange = (
+    filterType: keyof Filters,
+    value: string
+  ): void => {
     setFilters((prev) => ({
       ...prev,
       [filterType]: value,
     }));
+  };
+
+  const handleProductClick = (productId: number): void => {
+    router.push(`/pages/home/${productId}`);
+  };
+
+  const handleHomeClick = (): void => {
+    window.location.reload();
   };
 
   return (
@@ -33,9 +41,7 @@ const HomePage = () => {
       <header className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white py-4 shadow-lg">
         <div className="max-w-6xl mx-auto px-8 flex flex-col lg:flex-row justify-between items-center gap-4">
           <div
-            onClick={() => {
-              window.location.reload();
-            }}
+            onClick={handleHomeClick}
             className="text-3xl font-bold cursor-pointer"
           >
             Zoba
@@ -46,7 +52,9 @@ const HomePage = () => {
               className="px-4 py-2 rounded-full w-full lg:w-80 text-gray-800 text-lg"
               placeholder="ძებნა ტექნიკის სახელით..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchTerm(e.target.value)
+              }
             />
             <button
               onClick={handleSearch}
@@ -77,7 +85,9 @@ const HomePage = () => {
               <select
                 className="px-4 py-2 border-2 border-gray-300 rounded-xl bg-white cursor-pointer focus:border-indigo-500 focus:outline-none"
                 value={filters.category}
-                onChange={(e) => handleFilterChange("category", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  handleFilterChange("category", e.target.value)
+                }
               >
                 <option>ყველა</option>
                 <option>სმარტფონები</option>
@@ -94,7 +104,9 @@ const HomePage = () => {
               <select
                 className="px-4 py-2 border-2 border-gray-300 rounded-xl bg-white cursor-pointer focus:border-indigo-500 focus:outline-none"
                 value={filters.price}
-                onChange={(e) => handleFilterChange("price", e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  handleFilterChange("price", e.target.value)
+                }
               >
                 <option>ყველა</option>
                 <option>500₾ მდე</option>
@@ -108,11 +120,11 @@ const HomePage = () => {
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {products.map((product) => (
+          {(products as Product[]).map((product: Product) => (
             <div
               key={product.id}
               className="bg-white rounded-2xl overflow-hidden shadow-lg transition-all duration-300 cursor-pointer border-4 border-transparent hover:border-indigo-500"
-              onClick={() => router.push(`/pages/home/${product.id}`)}
+              onClick={() => handleProductClick(product.id)}
             >
               <div className="h-48 bg-gray-100 flex items-center justify-center relative">
                 {/* <img

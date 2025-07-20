@@ -2,28 +2,55 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { products } from "../../../data/productsInner";
+import { PageContext } from "@/app/common/types/common";
 
-const InnerPage = (context: any) => {
+const InnerPage: React.FC<PageContext> = ({ params }) => {
   const router = useRouter();
+  const { id } = params;
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const { id } = context.params;
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleSearch = () => {
+  const handleSearch = (): void => {
     console.log("ძებნა:", searchTerm);
   };
 
-  const goBack = () => {
+  const goBack = (): void => {
     router.back();
   };
-  const product = products[Number(id)];
 
-  const callSeller = () => {
+  const handleHomeClick = (): void => {
+    router.push("/");
+  };
+
+  const typedProducts = products;
+  const product = typedProducts[
+    id as unknown as keyof typeof typedProducts
+  ] as (typeof typedProducts)[keyof typeof typedProducts];
+
+  if (!product) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            პროდუქტი ვერ მოიძებნა
+          </h1>
+          <button
+            onClick={() => router.push("/")}
+            className="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-full transition-all duration-300"
+          >
+            მთავარ გვერდზე დაბრუნება
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const callSeller = (): void => {
     window.open(`tel:${product.phone}`);
   };
 
-  const openWhatsApp = () => {
-    window.open(`https://wa.me/${product.phone.replace(/[^0-9]/g, "")}`);
+  const openWhatsApp = (): void => {
+    const cleanPhone = product.phone.replace(/[^0-9]/g, "");
+    window.open(`https://wa.me/${cleanPhone}`);
   };
 
   return (
@@ -33,7 +60,7 @@ const InnerPage = (context: any) => {
         <div className="max-w-6xl mx-auto px-8 flex flex-col lg:flex-row justify-between items-center gap-4">
           <div
             className="text-3xl font-bold cursor-pointer"
-            onClick={() => router.push("/")}
+            onClick={handleHomeClick}
           >
             TechCatalog
           </div>
@@ -43,7 +70,9 @@ const InnerPage = (context: any) => {
               className="px-4 py-2 rounded-full w-full lg:w-80 text-gray-800 text-lg"
               placeholder="ძებნა ტექნიკის სახელით..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchTerm(e.target.value)
+              }
             />
             <button
               onClick={handleSearch}
@@ -136,7 +165,7 @@ const InnerPage = (context: any) => {
           </div>
 
           {/* Specifications */}
-          {product.specs && (
+          {"specs" in product && product.specs && (
             <div className="p-8 border-t border-gray-200">
               <h2 className="text-2xl font-bold text-gray-800 mb-4">
                 ტექნიკური მახასიათებლები
@@ -148,7 +177,7 @@ const InnerPage = (context: any) => {
                     className="flex justify-between p-3 bg-gray-50 rounded-xl"
                   >
                     <span className="font-bold text-gray-800">{key}</span>
-                    <span className="text-gray-600">{value}</span>
+                    <span className="text-gray-600">{String(value)}</span>
                   </div>
                 ))}
               </div>
