@@ -10,10 +10,6 @@ const InnerPage: React.FC<PageContext> = ({ params }) => {
   const { id } = params;
   const [searchTerm, setSearchTerm] = useState<string>("");
 
-  const handleSearch = (): void => {
-    console.log("ძებნა:", searchTerm);
-  };
-
   const goBack = (): void => {
     router.back();
   };
