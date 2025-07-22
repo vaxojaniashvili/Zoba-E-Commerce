@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { products } from "../../../data/productsInner";
 import { PageContext } from "@/app/common/types/common";
+import Image from "next/image";
 
 const InnerPage: React.FC<PageContext> = ({ params }) => {
   const router = useRouter();
@@ -96,9 +97,16 @@ const InnerPage: React.FC<PageContext> = ({ params }) => {
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* Product Detail Header */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 p-8">
-            <div className="h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center text-8xl text-gray-500">
-              {product.image}
-            </div>
+            {/* <div className="h-96 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center text-8xl text-gray-500">
+              
+            </div> */}
+            <Image
+              width={100}
+              height={100}
+              src={product.image}
+              alt={product.title}
+              className="w-full h-full object-cover rounded-[10px]"
+            />
             <div>
               <h1 className="text-4xl font-bold mb-4 text-gray-800">
                 {product.title}
@@ -106,8 +114,8 @@ const InnerPage: React.FC<PageContext> = ({ params }) => {
               <div className="text-4xl font-bold text-green-600 mb-6">
                 {product.price}
               </div>
-              <div className="text-gray-600 mb-8 text-lg leading-relaxed">
-                {product.description}
+              <div className="text-gray-600 mb-8 text-[16px] leading-relaxed">
+                {product.fullDescription}
               </div>
             </div>
           </div>
