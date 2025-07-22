@@ -75,12 +75,6 @@ const InnerPage: React.FC<PageContext> = ({ params }) => {
                 setSearchTerm(e.target.value)
               }
             />
-            <button
-              onClick={handleSearch}
-              className="bg-white bg-opacity-20 hover:bg-opacity-30 px-4 py-2 rounded-2xl transition-all duration-300"
-            >
-              ძებნა
-            </button>
           </div>
         </div>
       </header>
