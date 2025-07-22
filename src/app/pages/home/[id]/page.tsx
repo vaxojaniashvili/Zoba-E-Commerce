@@ -1,14 +1,14 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { products } from "../../../data/productsInner";
 import { PageContext } from "@/app/common/types/common";
 import Image from "next/image";
+import ZobaImage from "../../../assets/Zoba.jpeg";
 
 const InnerPage: React.FC<PageContext> = ({ params }) => {
   const router = useRouter();
   const { id } = params;
-  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const goBack = (): void => {
     router.back();
@@ -55,22 +55,17 @@ const InnerPage: React.FC<PageContext> = ({ params }) => {
       {/* Header */}
       <header className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white py-4 shadow-lg">
         <div className="max-w-6xl mx-auto px-8 flex flex-col lg:flex-row justify-between items-center gap-4">
-          <div
-            className="text-3xl font-bold cursor-pointer"
-            onClick={handleHomeClick}
-          >
-            TechCatalog
-          </div>
-          <div className="flex items-center gap-4 w-full lg:w-auto">
-            <input
-              type="text"
-              className="px-4 py-2 rounded-full w-full lg:w-80 text-gray-800 text-lg"
-              placeholder="ძებნა ტექნიკის სახელით..."
-              value={searchTerm}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setSearchTerm(e.target.value)
-              }
-            />
+          <div onClick={handleHomeClick} className="flex gap-2 cursor-pointer">
+            <div className="w-[40px] h-[40px]">
+              <Image
+                className="rounded-[5px]"
+                width={100}
+                height={100}
+                src={ZobaImage}
+                alt="Zoba Logo"
+              />
+            </div>
+            <div className="text-3xl font-bold">Zoba</div>
           </div>
         </div>
       </header>
